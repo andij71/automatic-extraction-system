@@ -1,7 +1,9 @@
 # automatic-extraction-system
 
 ## Allgemeine Informationen
+
 version: v1.0
+
 mcu: Arduino Nano
 
 
