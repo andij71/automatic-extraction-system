@@ -1,19 +1,26 @@
-/* ABSAUGAUTOMATIK
- * A0  ----- CURRENT1
- * A1  ----- CURRENT2
- * A2  ----- CURRENT3
- * 
- * D2  ----- S3 - TEACH3
- * D3  ----- S2 - TEACH2
- * D4  ----- S1 - TEACH1
- * D5  ----- SWITCH1
- * D6  ----- SWITCH2
- * D7  ----- SWITCH3
- * D8  ----- RELAIS1
- * D9  ----- RELAIS2
- * D10 ----- RELAIS3
- * 
- */
+// ABSAUGAUTOMATIK V1.0
+
+// analog inputs
+#define aiCURRENT1   0
+#define aiCURRENT2   1
+#define aiCURRENT3   2
+
+
+// digital inputs
+#define iTEACH1      4   // active low
+#define iTEACH2      3   // active low
+#define iTEACH3      2   // active low
+#define iSWITCH1     5   // active low
+#define iSWITCH2     6   // active low
+#define iSWITCH3     7   // active low
+#define iSJ1         11  // active low  
+#define iSJ2         12  // active low
+#define iSJ3         13  // active low
+
+// digital outputs
+#define oRELAIS1     8
+#define oRELAIS2     9
+#define oRELAIS3     10
 
 
 
@@ -50,13 +57,13 @@ void setup()
 void loop()
 {
 
-  int sensorVal = digitalRead(TEACH1);
+  bool teach1 = digitalRead(TEACH1);
   double Irms = current1.calcIrms(1480);  // Calculate Irms only
 
   
-  if (sensorVal == LOW) {
+  if (teach1 == LOW) {
     threeshold = Irms + offset;
-    //EEPROM.put(addr, threeshold);
+    EEPROM.put(addr, threeshold);
   } else {
     
   }
