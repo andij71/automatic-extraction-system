@@ -1,84 +1,107 @@
 // ABSAUGAUTOMATIK V1.0
 
-// analog inputs
-#define aiCURRENT1   0
-#define aiCURRENT2   1
-#define aiCURRENT3   2
-
-
-// digital inputs
-#define iTEACH1      4   // active low
-#define iTEACH2      3   // active low
-#define iTEACH3      2   // active low
-#define iSWITCH1     5   // active low
-#define iSWITCH2     6   // active low
-#define iSWITCH3     7   // active low
-#define iSJ1         11  // active low  
-#define iSJ2         12  // active low
-#define iSJ3         13  // active low
-
-// digital outputs
-#define oRELAIS1     8
-#define oRELAIS2     9
-#define oRELAIS3     10
-
-
-
-#define CURRENT_INPUT01 1
-#define TEACH1 3
-
-#define ABSAUGUNG 6
-
-
-#include "EmonLib.h"                   // Include Emon Library
+#include "EmonLib.h"                  
 #include <EEPROM.h>
-EnergyMonitor current1;                   // Create an instance
+#include "pins.h"
 
-const double offset = 0.1;
+EnergyMonitor ct1;            
+EnergyMonitor ct2;
+EnergyMonitor ct3;
+
+
+
+const double offset = 0.2;
 const int addr = 0;
-double threeshold = 100.0;
 
-
+double threeshold1 = 100.0;
+double threeshold2 = 100.0;
+double threeshold3 = 100.0;
 
 void setup()
 {  
   Serial.begin(9600);
 
-  pinMode(TEACH1, INPUT_PULLUP);
-  pinMode(ABSAUGUNG, OUTPUT);
+  pinMode(iTEACH1, INPUT_PULLUP);
+  pinMode(iTEACH2, INPUT_PULLUP);
+  pinMode(iTEACH3, INPUT_PULLUP);
+  pinMode(oRELAIS1, OUTPUT);
+  pinMode(oRELAIS2, OUTPUT);
+  pinMode(oRELAIS3, OUTPUT);
 
-  current1.current(CURRENT_INPUT01, 61.2);             // Current: input pin, calibration.
+  ct1.current(aiCURRENT1, 61.2);            
+  ct2.current(aiCURRENT2, 61.2); 
+  ct3.current(aiCURRENT3, 61.2); 
   
-  threeshold = 100.0;
-  delay(6000);
-  //EEPROM.get(addr,threeshold);
+  EEPROM.get(addr,threeshold1);
+  EEPROM.get(addr+4,threeshold2);
+  EEPROM.get(addr+8,threeshold3);
 }
 
 void loop()
 {
+  bool teach1 = digitalRead(iTEACH1);
+  bool teach2 = digitalRead(iTEACH2);
+  bool teach3 = digitalRead(iTEACH3);
 
-  bool teach1 = digitalRead(TEACH1);
-  double Irms = current1.calcIrms(1480);  // Calculate Irms only
+  double Irms1 = ct1.calcIrms(1480);
+  double Irms2 = ct2.calcIrms(1480);
+  double Irms3 = ct3.calcIrms(1480);
 
   
   if (teach1 == LOW) {
-    threeshold = Irms + offset;
-    EEPROM.put(addr, threeshold);
-  } else {
+    threeshold1 = Irms1 + offset;
+    EEPROM.put(addr, threeshold1);
+  }
+
+  if (teach2 == LOW) {
+    threeshold2 = Irms2 + offset;
+    EEPROM.put(addr+4, threeshold2);
+  }
+
+  if (teach3 == LOW) {
+    threeshold3 = Irms2 + offset;
+    EEPROM.put(addr+8, threeshold3);
+  }
+
+
+  if(Irms1>threeshold1)
+  {
+    digitalWrite(oRELAIS1, HIGH);
+  } 
+  else
+  {
+    digitalWrite(oRELAIS1, LOW);
+  }
+
+  if(Irms2>threeshold2)
+  {
+    digitalWrite(oRELAIS2, HIGH);
+  } 
+  else
+  {
+    digitalWrite(oRELAIS2, LOW);
+  }
+
+  if(Irms3>threeshold3)
+  {
+    digitalWrite(oRELAIS3, HIGH);
+  } 
+  else
+  {
+    digitalWrite(oRELAIS3, LOW);
+  }
     
-  }
+  Serial.print(Irms1);	       
+  Serial.print(" (");
+  Serial.print(threeshold1);
+  Serial.print(") ");
+  Serial.print(Irms2);	       
+  Serial.print(" (");
+  Serial.print(threeshold2);
+  Serial.print(") ");
+  Serial.print(Irms3);
+  Serial.print(" (");
+  Serial.print(threeshold3);
+  Serial.println(") ");	       
 
-
-  if(Irms>threeshold){
-    digitalWrite(ABSAUGUNG, HIGH);
-  } else{
-    digitalWrite(ABSAUGUNG, LOW);
-  }
-  
-  
-  
-  Serial.print(Irms);	       // Apparent power
-  Serial.print(" ");  
-  Serial.println(threeshold);
-  
 }
