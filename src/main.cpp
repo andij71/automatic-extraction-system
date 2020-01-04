@@ -1,13 +1,15 @@
 // ABSAUGAUTOMATIK V1.0
 
-#include "EmonLib.h"                  
+#include "EmonLib.h"       
+#include "automatic.h"           
 #include <EEPROM.h>
 #include "pins.h"
 
-EnergyMonitor ct1;            
-EnergyMonitor ct2;
-EnergyMonitor ct3;
 
+
+Automatic c1(aiCURRENT1,61.2);
+Automatic c2(aiCURRENT2,61.2);;
+Automatic c3(aiCURRENT3,61.2);;
 
 
 const double offset = 0.2;
@@ -28,13 +30,12 @@ void setup()
   pinMode(oRELAIS2, OUTPUT);
   pinMode(oRELAIS3, OUTPUT);
 
-  ct1.current(aiCURRENT1, 61.2);            
-  ct2.current(aiCURRENT2, 61.2); 
-  ct3.current(aiCURRENT3, 61.2); 
+ 
   
   EEPROM.get(addr,threeshold1);
   EEPROM.get(addr+4,threeshold2);
   EEPROM.get(addr+8,threeshold3);
+
 }
 
 void loop()
@@ -43,9 +44,9 @@ void loop()
   bool teach2 = digitalRead(iTEACH2);
   bool teach3 = digitalRead(iTEACH3);
 
-  double Irms1 = ct1.calcIrms(1480);
-  double Irms2 = ct2.calcIrms(1480);
-  double Irms3 = ct3.calcIrms(1480);
+  double Irms1 = c1.getCT();
+  double Irms2 = c2.getCT();
+  double Irms3 = c3.getCT();
 
   
   if (teach1 == LOW) {
@@ -90,7 +91,7 @@ void loop()
   {
     digitalWrite(oRELAIS3, LOW);
   }
-    
+  
   Serial.print(Irms1);	       
   Serial.print(" (");
   Serial.print(threeshold1);
