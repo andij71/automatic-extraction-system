@@ -41,6 +41,7 @@ void setup()
 void loop()
 {
   bool teach1 = digitalRead(iTEACH1);
+  
   bool teach2 = digitalRead(iTEACH2);
   bool teach3 = digitalRead(iTEACH3);
 
