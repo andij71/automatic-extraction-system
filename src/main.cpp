@@ -1,109 +1,41 @@
 // ABSAUGAUTOMATIK V1.0
-
-#include "EmonLib.h"       
+      
 #include "automatic.h"           
-#include <EEPROM.h>
 #include "pins.h"
 
+Automatic c1(aiCURRENT1,iSWITCH1,iTEACH1,oRELAIS1);
+Automatic c2(aiCURRENT2,iSWITCH2,iTEACH2,oRELAIS2);
+Automatic c3(aiCURRENT3,iSWITCH3,iTEACH3,oRELAIS3);
 
+bool sj1 = HIGH;
+bool sj2 = HIGH;
+bool sj3 = HIGH;
 
-Automatic c1(aiCURRENT1,61.2);
-Automatic c2(aiCURRENT2,61.2);;
-Automatic c3(aiCURRENT3,61.2);;
-
-
-const double offset = 0.2;
-const int addr = 0;
-
-double threeshold1 = 100.0;
-double threeshold2 = 100.0;
-double threeshold3 = 100.0;
+const unsigned int addr = 0;
 
 void setup()
 {  
-  Serial.begin(9600);
+  c1.initCalibration(61.2);
+  c2.initCalibration(61.2);
+  c3.initCalibration(61.2);
 
-  pinMode(iTEACH1, INPUT_PULLUP);
-  pinMode(iTEACH2, INPUT_PULLUP);
-  pinMode(iTEACH3, INPUT_PULLUP);
-  pinMode(oRELAIS1, OUTPUT);
-  pinMode(oRELAIS2, OUTPUT);
-  pinMode(oRELAIS3, OUTPUT);
+  c1.initEEPROM(addr);
+  c2.initEEPROM(addr+4);
+  c3.initEEPROM(addr+8);
 
- 
-  
-  EEPROM.get(addr,threeshold1);
-  EEPROM.get(addr+4,threeshold2);
-  EEPROM.get(addr+8,threeshold3);
-
+  sj1 = digitalRead(iSJ1);
+  sj2 = digitalRead(iSJ2);
+  sj3 = digitalRead(iSJ3);
 }
 
 void loop()
 {
-  bool teach1 = digitalRead(iTEACH1);
-  
-  bool teach2 = digitalRead(iTEACH2);
-  bool teach3 = digitalRead(iTEACH3);
+  if(sj1==LOW) c1.run();
+  if(sj2==LOW) c2.run();
+  if(sj3==LOW) c3.run();
 
-  double Irms1 = c1.getCT();
-  double Irms2 = c2.getCT();
-  double Irms3 = c3.getCT();
-
-  
-  if (teach1 == LOW) {
-    threeshold1 = Irms1 + offset;
-    EEPROM.put(addr, threeshold1);
-  }
-
-  if (teach2 == LOW) {
-    threeshold2 = Irms2 + offset;
-    EEPROM.put(addr+4, threeshold2);
-  }
-
-  if (teach3 == LOW) {
-    threeshold3 = Irms2 + offset;
-    EEPROM.put(addr+8, threeshold3);
-  }
-
-
-  if(Irms1>threeshold1)
-  {
-    digitalWrite(oRELAIS1, HIGH);
-  } 
-  else
-  {
-    digitalWrite(oRELAIS1, LOW);
-  }
-
-  if(Irms2>threeshold2)
-  {
-    digitalWrite(oRELAIS2, HIGH);
-  } 
-  else
-  {
-    digitalWrite(oRELAIS2, LOW);
-  }
-
-  if(Irms3>threeshold3)
-  {
-    digitalWrite(oRELAIS3, HIGH);
-  } 
-  else
-  {
-    digitalWrite(oRELAIS3, LOW);
-  }
-  
-  Serial.print(Irms1);	       
-  Serial.print(" (");
-  Serial.print(threeshold1);
-  Serial.print(") ");
-  Serial.print(Irms2);	       
-  Serial.print(" (");
-  Serial.print(threeshold2);
-  Serial.print(") ");
-  Serial.print(Irms3);
-  Serial.print(" (");
-  Serial.print(threeshold3);
-  Serial.println(") ");	       
-
+  c1.print();
+  c2.print();
+  c3.print();
+  Serial.println("");
 }
