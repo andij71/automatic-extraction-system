@@ -1,4 +1,5 @@
 #include "EmonLib.h"
+#include "toff.h"
 
 class Automatic{
 
@@ -8,25 +9,30 @@ public:
 
     void initCalibration(double _calibration);
     void initEEPROM(unsigned int _addr);
-    void initDelay(unsigned int _delay);
+    void initDelay(double _delay);
     void initOffset(double _offset);
     
     void teach();
     void run();
     void print();
-    double getCT();
+    
 
 private:
 
-    EnergyMonitor *pCT;
+    // Testkommentar
+    double getCT();
 
-    unsigned int pinCurrent;
+    EnergyMonitor *pCT;
+    TOF TOF1;
+    
+    unsigned int pinCurrent = 0;
     unsigned int pinSwitch = 0;
     unsigned int pinTeach = 0;
     unsigned int pinRelais = 0;
     unsigned int addrEEPROM = 0;
-    unsigned int delay = 0;
+    double delay = 3.0;
     
+    bool relaisState = true;
     double threeshold = 100.0;
     double offset = 0.1;
     double irms;

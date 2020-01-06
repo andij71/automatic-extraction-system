@@ -1,6 +1,6 @@
 #include "automatic.h"
 #include <EEPROM.h>
-#include "toff.h"
+
 
 Automatic:: Automatic(unsigned int _pinCurrent,unsigned int _pinSwitch,unsigned int _pinTeach, unsigned int _pinRelais):
     pCT(new EnergyMonitor),
@@ -32,10 +32,9 @@ void Automatic::initEEPROM(unsigned int _addr)
     EEPROM.get(_addr,threeshold);
 }
 
-void Automatic::initDelay(unsigned int _delay)
+void Automatic::initDelay(double _delay)
 {
     this->delay = _delay;
-    TOF TOF1; 
 }
 
 void Automatic::initOffset(double _offset)
@@ -53,29 +52,34 @@ void Automatic::run()
 {
     bool teachActiv = digitalRead(pinTeach);
     bool switchActiv = digitalRead(pinSwitch);
+    
 
-    if(teachActiv == LOW){
+    if(teachActiv == false){
         teach();
         return;
     }
 
 
-    if(switchActiv == LOW){
-        digitalWrite(pinRelais,HIGH);
+    if(switchActiv == true){
+        relaisState = true;
         return;
     }
     else{
         irms = getCT();
         if(irms>threeshold)
         {
-            digitalWrite(pinRelais,HIGH);
+            relaisState = true;
         }
         else
         {
-            digitalWrite(pinRelais,LOW);
+            relaisState = false;
         }
-        
     }
+
+    TOF1.parameters(relaisState,delay,"Seconds");
+    digitalWrite(pinRelais,TOF1.Q());
+
+
 }
 
 void Automatic::print()

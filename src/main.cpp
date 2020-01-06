@@ -1,4 +1,4 @@
-// ABSAUGAUTOMATIK V1.0
+// automatic extraction system V1.0
       
 #include "automatic.h"           
 #include "pins.h"
@@ -22,6 +22,10 @@ void setup()
   c1.initEEPROM(addr);
   c2.initEEPROM(addr+4);
   c3.initEEPROM(addr+8);
+
+  //c1.initDelay(3.0);
+  //c2.initDelay(3.0);
+  //c3.initDelay(3.0);
 
   sj1 = digitalRead(iSJ1);
   sj2 = digitalRead(iSJ2);
