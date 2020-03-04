@@ -14,7 +14,12 @@ bool sj3 = HIGH;
 const unsigned int addr = 0;
 
 void setup()
-{  
+{ 
+
+
+  pinMode(iSJ1, INPUT_PULLUP);
+  pinMode(iSJ2, INPUT_PULLUP);
+  pinMode(iSJ3, INPUT_PULLUP);
   c1.initCalibration(61.2);
   c2.initCalibration(61.2);
   c3.initCalibration(61.2);
@@ -26,10 +31,20 @@ void setup()
   //c1.initDelay(3.0);
   //c2.initDelay(3.0);
   //c3.initDelay(3.0);
-
+  
   sj1 = digitalRead(iSJ1);
+  sj1=LOW;
   sj2 = digitalRead(iSJ2);
+  sj2=LOW;
   sj3 = digitalRead(iSJ3);
+  sj3=LOW;
+  Serial.begin(9600);
+
+  delay(1000);
+  if(sj1==LOW) Serial.print("   CHANNEL1   ");
+  if(sj2==LOW) Serial.print("   CHANNEL2   ");
+  if(sj3==LOW) Serial.println("   CHANNEL3   ");
+  
 }
 
 void loop()
@@ -38,8 +53,8 @@ void loop()
   if(sj2==LOW) c2.run();
   if(sj3==LOW) c3.run();
 
-  c1.print();
-  c2.print();
-  c3.print();
-  Serial.println("");
+  if(sj1==LOW) c1.print();
+  if(sj2==LOW) c2.print();
+  if(sj3==LOW) c3.print();
+  Serial.println(); 
 }

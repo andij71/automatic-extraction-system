@@ -12,8 +12,9 @@ Automatic:: Automatic(unsigned int _pinCurrent,unsigned int _pinSwitch,unsigned 
     pinMode(pinSwitch, INPUT_PULLUP);
     pinMode(pinTeach, INPUT_PULLUP);
     pinMode(pinRelais, OUTPUT);
-
-    Serial.begin(9600);
+    onTrigger = false;
+    TON1.parameters(onTrigger,10,"Seconds");
+    //Serial.begin(9600);
 }
 
 Automatic::~Automatic()
@@ -50,25 +51,26 @@ void Automatic::teach()
 
 void Automatic::run()
 {
-    bool teachActiv = digitalRead(pinTeach);
-    bool switchActiv = digitalRead(pinSwitch);
+    teachActiv = digitalRead(pinTeach);
+    onTrigger = true;
+    TON1.parameters(onTrigger,6,"Seconds");
     
-
+    
     if(teachActiv == false){
         teach();
         return;
     }
 
-
-    if(switchActiv == true){
+    bool switchActiv = digitalRead(pinSwitch);
+    if(switchActiv == false){
         relaisState = true;
-        return;
     }
     else{
-        irms = getCT();
+          this->irms = getCT();
         if(irms>threeshold)
-        {
-            relaisState = true;
+        {   
+            //Serial.println("Strom");
+            if(TON1.Q()) relaisState = true;
         }
         else
         {
@@ -78,19 +80,37 @@ void Automatic::run()
 
     TOF1.parameters(relaisState,delay,"Seconds");
     digitalWrite(pinRelais,TOF1.Q());
-
+    
+    
+    onTrigger = false;
 
 }
 
 void Automatic::print()
-{
+{   
+    
+    
+    if(!this->teachActiv){
+        Serial.print("     TEACH     ");
+        return;
+    }
+
+    if(TOF1.Q()){
+        Serial.print("     ACTIVE     ");
+        return;
+    }
+    
+    
+
+    
     Serial.print(this->irms);
     Serial.print(" (");
     Serial.print(this->threeshold);
     Serial.print(") ");
+    
+    if(TOF1.Q()) Serial.print("•  ");
+    else Serial.print("o  ");
 }
-
-
 
 double Automatic::getCT()
 {

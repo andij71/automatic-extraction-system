@@ -1,5 +1,6 @@
 #include "EmonLib.h"
 #include "toff.h"
+#include "ton.h"
 
 class Automatic{
 
@@ -19,11 +20,13 @@ public:
 
 private:
 
-    // Testkommentar
+
     double getCT();
 
     EnergyMonitor *pCT;
     TOF TOF1;
+
+    TON TON1;
     
     unsigned int pinCurrent = 0;
     unsigned int pinSwitch = 0;
@@ -32,11 +35,13 @@ private:
     unsigned int addrEEPROM = 0;
     double delay = 3.0;
     
-    bool relaisState = true;
+    bool relaisState = false;
+    bool teachActiv = true;
+    bool onTrigger = true;
     double threeshold = 100.0;
-    double offset = 0.1;
-    double irms;
-    int samples = 300;
+    double offset = 1.0;
+    double irms = 0.0;
+    int samples = 1500;
 
 
 
