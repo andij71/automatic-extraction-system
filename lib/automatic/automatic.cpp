@@ -35,7 +35,7 @@ void Automatic::initEEPROM(unsigned int _addr)
 
 void Automatic::initDelay(double _delay)
 {
-    this->delay = _delay;
+    this->delay_off = _delay;
 }
 
 void Automatic::initOffset(double _offset)
@@ -52,10 +52,8 @@ void Automatic::teach()
 void Automatic::run()
 {
     teachActiv = digitalRead(pinTeach);
-    onTrigger = true;
-    TON1.parameters(onTrigger,6,"Seconds");
-    
-    
+    TON1.parameters(onTrigger,delay_on,"Seconds");
+
     if(teachActiv == false){
         teach();
         return;
@@ -66,10 +64,10 @@ void Automatic::run()
         relaisState = true;
     }
     else{
-          this->irms = getCT();
+        this->irms = getCT();
         if(irms>threeshold)
         {   
-            //Serial.println("Strom");
+            Serial.println("Strom");
             if(TON1.Q()) relaisState = true;
         }
         else
@@ -78,11 +76,11 @@ void Automatic::run()
         }
     }
 
-    TOF1.parameters(relaisState,delay,"Seconds");
+    TOF1.parameters(relaisState,delay_off,"Seconds");
     digitalWrite(pinRelais,TOF1.Q());
     
-    
-    onTrigger = false;
+    onTrigger = true;   
+    //onTrigger = false;
 
 }
 

@@ -33,11 +33,11 @@ void setup()
   //c3.initDelay(3.0);
   
   sj1 = digitalRead(iSJ1);
-  sj1=LOW;
+  //sj1=LOW;
   sj2 = digitalRead(iSJ2);
-  sj2=LOW;
+  //sj2=LOW;
   sj3 = digitalRead(iSJ3);
-  sj3=LOW;
+  //sj3=LOW;
   Serial.begin(9600);
 
   delay(1000);

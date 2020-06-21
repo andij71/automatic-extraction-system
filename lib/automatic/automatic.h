@@ -20,12 +20,15 @@ public:
 
 private:
 
+    const double delay_off = 3.0;
+    const double delay_on = 3
+    const double offset = 1.0;
+    const int samples = 1500;
 
     double getCT();
 
     EnergyMonitor *pCT;
     TOF TOF1;
-
     TON TON1;
     
     unsigned int pinCurrent = 0;
@@ -33,15 +36,14 @@ private:
     unsigned int pinTeach = 0;
     unsigned int pinRelais = 0;
     unsigned int addrEEPROM = 0;
-    double delay = 3.0;
+
+
     
     bool relaisState = false;
     bool teachActiv = true;
-    bool onTrigger = true;
+    bool onTrigger = false;
     double threeshold = 100.0;
-    double offset = 1.0;
     double irms = 0.0;
-    int samples = 1500;
 
 
 
