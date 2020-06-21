@@ -20,10 +20,10 @@ public:
 
 private:
 
-    const double delay_off = 3.0;
-    const double delay_on = 3
-    const double offset = 1.0;
+    const double delay_on = 3;
     const int samples = 1500;
+    double delay_off = 3.0;
+    double offset = 1.0;
 
     double getCT();
 
