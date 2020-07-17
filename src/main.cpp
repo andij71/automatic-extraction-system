@@ -40,7 +40,7 @@ void setup()
   sj3=LOW;
   Serial.begin(9600);
 
-  delay(1000);
+  //delay(1000);
   if(sj1==LOW) Serial.print("   CHANNEL1   ");
   if(sj2==LOW) Serial.print("   CHANNEL2   ");
   if(sj3==LOW) Serial.println("   CHANNEL3   ");
