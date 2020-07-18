@@ -1,5 +1,4 @@
-for /f %i in ('python version.py -v %VERSION%') do set VERSION=%i
-
+for /f %i in ('python version.py -v %VERSION%' --rc) do set VERSION=%i
 git add --all
 git commit -m "%VERSION% "
 git tag -a "%VERSION%" -m "Release %VERSION%"
