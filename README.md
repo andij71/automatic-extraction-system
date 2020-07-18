@@ -5,8 +5,6 @@
 - mcu: Arduino Nano   
 - language: C++  
  
-## Hardware 
- 
 ### Analog Inputs 
 - CURRENT1    A0  
 - CURRENT2    A1   
