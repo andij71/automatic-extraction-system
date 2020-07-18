@@ -1,13 +1,13 @@
 # automatic-extraction-system
 
-## General Information
-version: v1.0 
-mcu: Arduino Nano 
-language: C++ 
-
-## Hardware
-test 
-### Analog Inputs
+## General Information 
+- version: v1.0  
+- mcu: Arduino Nano   
+- language: C++  
+ 
+## Hardware 
+ 
+### Analog Inputs 
 CURRENT1    A0
 CURRENT2    A1 
 CURRENT3    A2
