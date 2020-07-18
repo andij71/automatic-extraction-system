@@ -3,7 +3,7 @@
 ## General Information
 version: v1.0 
 mcu: Arduino Nano 
-language: C++
+language: C++ 
 
 ## Hardware
 
