@@ -9,7 +9,7 @@ language: C++
 
 ### Analog Inputs
 CURRENT1    A0
-CURRENT2    A1
+CURRENT2    A1 
 CURRENT3    A2
 
 ### Digital Inputs
