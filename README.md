@@ -11,7 +11,7 @@
 - CURRENT1    A0  
 - CURRENT2    A1   
 - CURRENT3    A2  
- 
+  
 ### Digital Inputs    
 - TEACH1      D4    active low  
 - TEACH2      D3    active low  
